@@ -17,7 +17,12 @@ export function formatNumber(num) {
 }
 
 export function formatPercentage(value) {
-  return `${value > 0 ? '+' : ''}${value.toFixed(1)}%`
+  // For percentage values, format to 1 decimal place
+  if (typeof value === 'number') {
+    return `${value.toFixed(1)}%`
+  }
+  // For change values (like +5.5%), format with sign
+  return `${value > 0 ? '+' : ''}${Math.abs(value).toFixed(1)}%`
 }
 
 export function generateId() {

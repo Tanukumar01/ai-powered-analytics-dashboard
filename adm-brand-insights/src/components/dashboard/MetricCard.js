@@ -16,7 +16,7 @@ const MetricCard = ({ title, value, change, trend, icon, type = 'number' }) => {
 
   const formatValue = (val) => {
     if (type === 'currency') return formatCurrency(val)
-    if (type === 'percentage') return `${val}%`
+    if (type === 'percentage') return formatPercentage(val)
     return formatNumber(val)
   }
 
