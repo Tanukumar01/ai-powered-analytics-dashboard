@@ -1,0 +1,259 @@
+import React, { useState, useRef, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { MessageCircle, Send, Bot, User, Sparkles, TrendingUp, AlertTriangle, Lightbulb } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card'
+import { Button } from '../ui/Button'
+import { Badge } from '../ui/Badge'
+
+const AIChatAssistant = () => {
+  const [messages, setMessages] = useState([
+    {
+      id: 1,
+      type: 'ai',
+      content: "Hello! I'm your AI analytics assistant. I can help you understand your data, find insights, and optimize your campaigns. What would you like to know?",
+      timestamp: new Date(),
+      suggestions: [
+        "Show me top performing campaigns",
+        "What's causing the conversion drop?",
+        "Predict next month's revenue",
+        "Optimize my ad spend"
+      ]
+    }
+  ])
+  const [inputValue, setInputValue] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
+  const messagesEndRef = useRef(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
+
+  const aiResponses = {
+    'performance': {
+      content: "Your top performing campaigns are:\n\n1. **Black Friday** - 23% above average ROI\n2. **Holiday Special** - 18% conversion rate\n3. **Cyber Monday** - 31% revenue growth\n\nI recommend increasing budget allocation to these campaigns.",
+      type: 'insight',
+      data: { revenue: 485000, growth: 12.5 }
+    },
+    'conversion': {
+      content: "I've analyzed your conversion data and found:\n\n• Mobile conversion rate dropped 8% this week\n• Desktop conversions are stable (+2%)\n• Email campaigns show 15% better conversion\n\n**Recommendation:** Optimize mobile landing pages and increase email marketing budget.",
+      type: 'alert',
+      data: { conversions: 6250, change: -8 }
+    },
+    'revenue': {
+      content: "Based on current trends and historical data, I predict:\n\n• **Next Month:** $520k (+7.2%)\n• **Q1 2025:** $1.8M (+15%)\n• **Confidence Level:** 87%\n\nKey drivers: Holiday season, improved targeting, and new product launches.",
+      type: 'prediction',
+      data: { predicted: 520000, confidence: 87 }
+    },
+    'optimize': {
+      content: "Here are my optimization recommendations:\n\n1. **Budget Reallocation:** Move 15% from underperforming to top campaigns\n2. **Targeting:** Switch to custom audiences (+12% expected)\n3. **Bidding:** Enable auto-bidding for efficiency\n4. **Creative:** Implement dynamic ads (+15% engagement)\n\nExpected impact: +18% overall ROI",
+      type: 'optimization',
+      data: { potentialGain: 18 }
+    }
+  }
+
+  const handleSendMessage = async (message) => {
+    if (!message.trim()) return
+
+    // Add user message
+    const userMessage = {
+      id: Date.now(),
+      type: 'user',
+      content: message,
+      timestamp: new Date()
+    }
+    setMessages(prev => [...prev, userMessage])
+    setInputValue('')
+
+    // Simulate AI thinking
+    setIsTyping(true)
+    await new Promise(resolve => setTimeout(resolve, 1500))
+
+    // Generate AI response
+    let aiResponse = {
+      id: Date.now() + 1,
+      type: 'ai',
+      content: "I understand you're asking about your analytics. Let me analyze the data and provide you with actionable insights.",
+      timestamp: new Date(),
+      type: 'general'
+    }
+
+    // Match keywords to specific responses
+    const lowerMessage = message.toLowerCase()
+    if (lowerMessage.includes('performance') || lowerMessage.includes('top') || lowerMessage.includes('best')) {
+      aiResponse = {
+        ...aiResponse,
+        content: aiResponses.performance.content,
+        type: 'insight',
+        data: aiResponses.performance.data
+      }
+    } else if (lowerMessage.includes('conversion') || lowerMessage.includes('drop') || lowerMessage.includes('decline')) {
+      aiResponse = {
+        ...aiResponse,
+        content: aiResponses.conversion.content,
+        type: 'alert',
+        data: aiResponses.conversion.data
+      }
+    } else if (lowerMessage.includes('revenue') || lowerMessage.includes('predict') || lowerMessage.includes('forecast')) {
+      aiResponse = {
+        ...aiResponse,
+        content: aiResponses.revenue.content,
+        type: 'prediction',
+        data: aiResponses.revenue.data
+      }
+    } else if (lowerMessage.includes('optimize') || lowerMessage.includes('improve') || lowerMessage.includes('better')) {
+      aiResponse = {
+        ...aiResponse,
+        content: aiResponses.optimize.content,
+        type: 'optimization',
+        data: aiResponses.optimize.data
+      }
+    }
+
+    setMessages(prev => [...prev, aiResponse])
+    setIsTyping(false)
+  }
+
+  const handleSuggestionClick = (suggestion) => {
+    handleSendMessage(suggestion)
+  }
+
+  const getMessageIcon = (type) => {
+    switch (type) {
+      case 'insight': return <TrendingUp className="w-4 h-4 text-green-600" />
+      case 'alert': return <AlertTriangle className="w-4 h-4 text-yellow-600" />
+      case 'prediction': return <Sparkles className="w-4 h-4 text-purple-600" />
+      case 'optimization': return <Lightbulb className="w-4 h-4 text-blue-600" />
+      default: return <Bot className="w-4 h-4 text-brand-600" />
+    }
+  }
+
+  const getMessageStyle = (type) => {
+    switch (type) {
+      case 'insight': return 'border-l-4 border-l-green-500 bg-green-50 dark:bg-green-900/20'
+      case 'alert': return 'border-l-4 border-l-yellow-500 bg-yellow-50 dark:bg-yellow-900/20'
+      case 'prediction': return 'border-l-4 border-l-purple-500 bg-purple-50 dark:bg-purple-900/20'
+      case 'optimization': return 'border-l-4 border-l-blue-500 bg-blue-50 dark:bg-blue-900/20'
+      default: return 'border-l-4 border-l-brand-500 bg-brand-50 dark:bg-brand-900/20'
+    }
+  }
+
+  return (
+    <Card className="border-0 shadow-lg h-[600px] flex flex-col">
+      <CardHeader className="border-b">
+        <CardTitle className="flex items-center space-x-2">
+          <div className="p-1 bg-gradient-to-r from-purple-500 to-blue-500 rounded">
+            <Bot className="w-5 h-5 text-white" />
+          </div>
+          <span>AI Analytics Assistant</span>
+          <Badge variant="secondary" className="text-xs">
+            Powered by AI
+          </Badge>
+        </CardTitle>
+      </CardHeader>
+      
+      <CardContent className="flex-1 flex flex-col p-0">
+        {/* Messages Area */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <AnimatePresence>
+            {messages.map((message) => (
+              <motion.div
+                key={message.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div className={`max-w-[80%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
+                  <div className={`flex items-start space-x-2 ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                    <div className={`p-2 rounded-full ${message.type === 'user' ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'}`}>
+                      {message.type === 'user' ? (
+                        <User className="w-4 h-4 text-white" />
+                      ) : (
+                        getMessageIcon(message.type)
+                      )}
+                    </div>
+                    <div className={`p-3 rounded-lg ${
+                      message.type === 'user' 
+                        ? 'bg-brand-500 text-white' 
+                        : `bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 ${getMessageStyle(message.type)}`
+                    }`}>
+                      <div className="whitespace-pre-line text-sm text-gray-900 dark:text-gray-100">
+                        {message.content}
+                      </div>
+                      {message.suggestions && (
+                        <div className="mt-3 space-y-2">
+                          <p className="text-xs text-gray-600 dark:text-gray-400">Quick suggestions:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {message.suggestions.map((suggestion, index) => (
+                              <Button
+                                key={index}
+                                size="sm"
+                                variant="outline"
+                                className="text-xs bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                onClick={() => handleSuggestionClick(suggestion)}
+                              >
+                                {suggestion}
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+          
+          {isTyping && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex justify-start"
+            >
+              <div className="flex items-center space-x-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                </div>
+                <span className="text-sm text-gray-600 dark:text-gray-400">AI is thinking...</span>
+              </div>
+            </motion.div>
+          )}
+          
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input Area */}
+        <div className="border-t border-gray-200 dark:border-gray-700 p-4">
+          <div className="flex space-x-2">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(inputValue)}
+              placeholder="Ask me about your analytics..."
+              className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-brand-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+              disabled={isTyping}
+            />
+            <Button
+              onClick={() => handleSendMessage(inputValue)}
+              disabled={!inputValue.trim() || isTyping}
+              size="sm"
+              className="px-4"
+            >
+              <Send className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+export default AIChatAssistant
