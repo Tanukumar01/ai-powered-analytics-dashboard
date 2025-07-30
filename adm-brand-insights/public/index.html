@@ -49,9 +49,13 @@
         background: #64748b;
       }
       
-      /* Smooth scrolling */
+      /* Force scroll to top */
       html {
-        scroll-behavior: smooth;
+        scroll-behavior: auto;
+      }
+      
+      body {
+        scroll-behavior: auto;
       }
       
       /* Font family */
@@ -63,6 +67,35 @@
         -moz-osx-font-smoothing: grayscale;
       }
     </style>
+    
+    <script>
+      // Simple and direct scroll to top solution
+      (function() {
+        // Disable scroll restoration
+        if ('scrollRestoration' in history) {
+          history.scrollRestoration = 'manual';
+        }
+        
+        // Simple scroll to top function
+        function scrollToTop() {
+          window.scrollTo(0, 0);
+        }
+        
+        // Scroll to top immediately
+        scrollToTop();
+        
+        // Scroll to top on page load
+        window.addEventListener('load', scrollToTop);
+        window.addEventListener('pageshow', scrollToTop);
+        
+        // Also scroll to top when page becomes visible
+        document.addEventListener('visibilitychange', function() {
+          if (!document.hidden) {
+            scrollToTop();
+          }
+        });
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

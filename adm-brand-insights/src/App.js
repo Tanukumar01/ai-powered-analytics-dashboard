@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Toaster, toast } from 'react-hot-toast'
+import { ChevronUp } from 'lucide-react'
+import { ScrollToTopOnMount } from './components/ScrollToTopOnMount'
 import Header from './components/layout/Header'
 import MetricCard from './components/dashboard/MetricCard'
 import RevenueChart from './components/dashboard/RevenueChart'
@@ -21,20 +23,56 @@ import {
   recentActivity,
   topProducts,
   geographicData,
-  deviceData,
-  timeData
+  deviceData
 } from './data/mockData'
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
   const [currentMetrics, setCurrentMetrics] = useState(metricsData)
+  const [showScrollTop, setShowScrollTop] = useState(false)
+
+  // Use simple component to force scroll to top
+  // This will be rendered at the top of the component tree
+
+  // Handle scroll to show/hide scroll-to-top button
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
 
   // Simulate real-time updates
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false)
       toast.success('AI-powered dashboard loaded successfully!')
+      // Scroll to top to ensure main content is visible
+      window.scrollTo(0, 0)
     }, 1500)
+
+    // Force scroll to top on page load
+    window.scrollTo(0, 0)
+    
+    // Also scroll to top when component mounts
+    const scrollToTop = () => {
+      window.scrollTo(0, 0)
+    }
+    
+    // Scroll to top immediately
+    scrollToTop()
+    
+    // Also scroll to top after a short delay to ensure DOM is ready
+    const scrollTimer = setTimeout(scrollToTop, 100)
 
     // Simulate real-time metric updates
     const updateInterval = setInterval(() => {
@@ -60,6 +98,7 @@ function App() {
 
     return () => {
       clearTimeout(timer)
+      clearTimeout(scrollTimer)
       clearInterval(updateInterval)
     }
   }, [])
@@ -78,15 +117,30 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background">
+      <ScrollToTopOnMount />
       <Toaster position="top-right" />
       <Header />
       
-      <main className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          onClick={scrollToTop}
+          className="fixed bottom-6 right-6 z-50 p-3 bg-brand-500 hover:bg-brand-600 text-white rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+        >
+          <ChevronUp className="w-5 h-5" />
+        </motion.button>
+      )}
+      
+      <main className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-8" id="main-dashboard">
         {/* Welcome Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-6 sm:mb-8"
+          id="dashboard-welcome"
         >
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-2">
             Welcome back, Admin! 👋
@@ -94,6 +148,7 @@ function App() {
           <p className="text-sm sm:text-base text-muted-foreground">
             Your advanced AI-powered analytics dashboard is ready with intelligent insights and real-time monitoring
           </p>
+                    
         </motion.div>
 
         {/* Metrics Cards */}
@@ -173,12 +228,14 @@ function App() {
         </div>
 
         {/* AI Chat Assistant and Additional Insights */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8" id="additional-insights">
           {/* AI Chat Assistant */}
           <AIChatAssistant />
 
           {/* Additional Insights Grid */}
           <div className="space-y-4 sm:space-y-6">
+            <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg mb-4">
+            </div>
             {/* Top Products */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -283,10 +340,10 @@ function App() {
               </div>
             ))}
           </div>
-        </motion.div>
-      </main>
-    </div>
-  )
-}
+                 </motion.div>
+       </main>
+     </div>
+   )
+ }
 
 export default App 

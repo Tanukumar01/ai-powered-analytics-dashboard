@@ -56,7 +56,29 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    /* Prevent scroll restoration */
+    scroll-behavior: auto;
   }
+  
+  /* Force scroll to top on page load */
+  html {
+    scroll-behavior: auto;
+  }
+  
+  /* Ensure the page starts at the top */
+  #root {
+    scroll-behavior: auto;
+  }
+  
+  /* Prevent any scroll restoration */
+  body {
+    scroll-behavior: auto;
+    /* Force scroll to top */
+    scroll-padding-top: 0;
+    scroll-padding-bottom: 0;
+  }
+  
+
 }
 
 @layer components {
