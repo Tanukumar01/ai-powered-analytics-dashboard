@@ -81,23 +81,23 @@ function App() {
       <Toaster position="top-right" />
       <Header />
       
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
         {/* Welcome Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
-          <h1 className="text-3xl font-bold text-foreground mb-2">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-2">
             Welcome back, Admin! 👋
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm sm:text-base text-muted-foreground">
             Your advanced AI-powered analytics dashboard is ready with intelligent insights and real-time monitoring
           </p>
         </motion.div>
 
         {/* Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <MetricCard
             title="Total Revenue"
             value={currentMetrics.revenue.current}
@@ -133,38 +133,38 @@ function App() {
         </div>
 
         {/* AI Predictions Section */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <AIPredictions />
         </div>
 
         {/* AI Anomaly Detector Section */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <AIAnomalyDetector />
         </div>
 
         {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <RevenueChart data={revenueData} />
           <UserGrowthChart data={userGrowthData} />
         </div>
 
         {/* Traffic Sources Chart */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <ChannelPieChart data={channelData} />
         </div>
 
         {/* AI Auto-Optimizer Section */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <AIAutoOptimizer />
         </div>
 
         {/* AI Sentiment Analyzer Section */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <AISentimentAnalyzer />
         </div>
 
         {/* Campaign Performance Table */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <DataTable
             data={campaignData}
             title="Campaign Performance"
@@ -173,30 +173,30 @@ function App() {
         </div>
 
         {/* AI Chat Assistant and Additional Insights */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* AI Chat Assistant */}
           <AIChatAssistant />
 
           {/* Additional Insights Grid */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Top Products */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg p-6"
+              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg p-4 sm:p-6"
             >
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Top Products</h3>
-              <div className="space-y-3">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4">Top Products</h3>
+              <div className="space-y-2 sm:space-y-3">
                 {topProducts.map((product, index) => (
                   <div key={index} className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{product.name}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{product.name}</p>
                       <p className="text-xs text-gray-600 dark:text-gray-400">
                         {product.sales} sales • {product.revenue.toLocaleString()}
                       </p>
                     </div>
-                    <span className={`text-xs font-medium ${
+                    <span className={`text-xs font-medium ml-2 ${
                       product.growth > 0 ? 'text-green-600' : 'text-red-600'
                     }`}>
                       {product.growth > 0 ? '+' : ''}{product.growth}%
@@ -211,19 +211,19 @@ function App() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg p-6"
+              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg p-4 sm:p-6"
             >
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Top Markets</h3>
-              <div className="space-y-3">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4">Top Markets</h3>
+              <div className="space-y-2 sm:space-y-3">
                 {geographicData.slice(0, 5).map((country, index) => (
                   <div key={index} className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{country.country}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{country.country}</p>
                       <p className="text-xs text-gray-600 dark:text-gray-400">
                         {country.users.toLocaleString()} users
                       </p>
                     </div>
-                    <span className="text-xs font-medium text-green-600">
+                    <span className="text-xs font-medium text-green-600 ml-2">
                       +{country.growth}%
                     </span>
                   </div>
@@ -236,15 +236,15 @@ function App() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.7 }}
-              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg p-6"
+              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg p-4 sm:p-6"
             >
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Device Usage</h3>
-              <div className="space-y-3">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4">Device Usage</h3>
+              <div className="space-y-2 sm:space-y-3">
                 {deviceData.map((device, index) => (
                   <div key={index} className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{device.device}</span>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate mr-2">{device.device}</span>
+                    <div className="flex items-center space-x-2 flex-shrink-0">
+                      <div className="w-12 sm:w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                         <div
                           className="bg-brand-500 h-2 rounded-full"
                           style={{ width: `${device.percentage}%` }}
@@ -264,20 +264,20 @@ function App() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8 }}
-          className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg p-6"
+          className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg p-4 sm:p-6"
         >
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Recent Activity</h3>
-          <div className="space-y-3">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4">Recent Activity</h3>
+          <div className="space-y-2 sm:space-y-3">
             {recentActivity.map((activity) => (
               <div key={activity.id} className="flex items-center space-x-3">
-                <div className={`w-2 h-2 rounded-full ${
+                <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
                   activity.status === 'success' ? 'bg-green-500' :
                   activity.status === 'warning' ? 'bg-yellow-500' :
                   activity.status === 'info' ? 'bg-blue-500' :
                   'bg-gray-500'
                 }`}></div>
-                <div className="flex-1">
-                  <p className="text-sm text-gray-900 dark:text-gray-100">{activity.action}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-gray-900 dark:text-gray-100 truncate">{activity.action}</p>
                   <p className="text-xs text-gray-600 dark:text-gray-400">{activity.time}</p>
                 </div>
               </div>

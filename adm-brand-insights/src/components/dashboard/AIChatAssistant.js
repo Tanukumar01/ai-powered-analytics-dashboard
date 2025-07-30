@@ -141,118 +141,161 @@ const AIChatAssistant = () => {
     }
   }
 
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
+  };
+
   return (
-    <Card className="border-0 shadow-lg h-[600px] flex flex-col">
-      <CardHeader className="border-b">
-        <CardTitle className="flex items-center space-x-2">
-          <div className="p-1 bg-gradient-to-r from-purple-500 to-blue-500 rounded">
-            <Bot className="w-5 h-5 text-white" />
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.3 }}
+    >
+      <Card className="border-0 shadow-lg h-[500px] sm:h-[600px] flex flex-col">
+        <CardHeader className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-brand-500 to-purple-600 rounded-full flex items-center justify-center">
+              <Bot className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+            </div>
+            <div>
+              <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
+                AI Analytics Assistant
+              </CardTitle>
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                Ask me anything about your data
+              </p>
+            </div>
           </div>
-          <span>AI Analytics Assistant</span>
-          <Badge variant="secondary" className="text-xs">
-            Powered by AI
-          </Badge>
-        </CardTitle>
-      </CardHeader>
-      
-      <CardContent className="flex-1 flex flex-col p-0">
-        {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          <AnimatePresence>
-            {messages.map((message) => (
-              <motion.div
-                key={message.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div className={`max-w-[80%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
-                  <div className={`flex items-start space-x-2 ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                    <div className={`p-2 rounded-full ${message.type === 'user' ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'}`}>
-                      {message.type === 'user' ? (
-                        <User className="w-4 h-4 text-white" />
-                      ) : (
-                        getMessageIcon(message.type)
-                      )}
-                    </div>
-                    <div className={`p-3 rounded-lg ${
-                      message.type === 'user' 
-                        ? 'bg-brand-500 text-white' 
-                        : `bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 ${getMessageStyle(message.type)}`
-                    }`}>
-                      <div className="whitespace-pre-line text-sm text-gray-900 dark:text-gray-100">
-                        {message.content}
+        </CardHeader>
+
+        <CardContent className="p-0 flex-1 flex flex-col">
+          {/* Messages Area */}
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+            <AnimatePresence>
+              {messages.map((message) => (
+                <motion.div
+                  key={message.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div className={`max-w-[85%] sm:max-w-[75%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
+                    <div className={`flex items-start space-x-2 ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                      <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        message.type === 'user' 
+                          ? 'bg-brand-500' 
+                          : 'bg-gradient-to-br from-brand-500 to-purple-600'
+                      }`}>
+                        {getMessageIcon(message.type)}
                       </div>
-                      {message.suggestions && (
-                        <div className="mt-3 space-y-2">
-                          <p className="text-xs text-gray-600 dark:text-gray-400">Quick suggestions:</p>
-                          <div className="flex flex-wrap gap-2">
-                            {message.suggestions.map((suggestion, index) => (
-                              <Button
-                                key={index}
-                                size="sm"
-                                variant="outline"
-                                className="text-xs bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600"
-                                onClick={() => handleSuggestionClick(suggestion)}
-                              >
-                                {suggestion}
-                              </Button>
-                            ))}
-                          </div>
+                      <div className={`rounded-lg p-3 sm:p-4 ${getMessageStyle(message.type)}`}>
+                        <div className="text-sm sm:text-base text-gray-900 dark:text-gray-100 whitespace-pre-wrap">
+                          {message.content}
                         </div>
-                      )}
+                        {message.data && (
+                          <div className="mt-3 p-2 sm:p-3 bg-white/50 dark:bg-gray-800/50 rounded-md">
+                            <div className="grid grid-cols-2 gap-2 sm:gap-4 text-xs sm:text-sm">
+                              {Object.entries(message.data).map(([key, value]) => (
+                                <div key={key} className="flex justify-between">
+                                  <span className="text-gray-600 dark:text-gray-400 capitalize">
+                                    {key.replace(/([A-Z])/g, ' $1').trim()}:
+                                  </span>
+                                  <span className="font-medium text-gray-900 dark:text-gray-100">
+                                    {typeof value === 'number' && key.includes('revenue') ? formatCurrency(value) :
+                                     typeof value === 'number' && key.includes('confidence') ? `${value}%` :
+                                     typeof value === 'number' && key.includes('gain') ? `+${value}%` :
+                                     typeof value === 'number' && key.includes('change') ? `${value > 0 ? '+' : ''}${value}%` :
+                                     typeof value === 'number' ? value.toLocaleString() : value}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {message.suggestions && (
+                          <div className="mt-3 space-y-2">
+                            <p className="text-xs text-gray-600 dark:text-gray-400">Quick suggestions:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {message.suggestions.map((suggestion, index) => (
+                                <Button
+                                  key={index}
+                                  onClick={() => handleSuggestionClick(suggestion)}
+                                  variant="outline"
+                                  size="sm"
+                                  className="text-xs h-7 sm:h-8 px-2 sm:px-3"
+                                >
+                                  {suggestion}
+                                </Button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+
+            {/* Typing Indicator */}
+            {isTyping && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex justify-start"
+              >
+                <div className="max-w-[75%]">
+                  <div className="flex items-start space-x-2">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-brand-500 to-purple-600 rounded-full flex items-center justify-center">
+                      <Bot className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                    </div>
+                    <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-3 sm:p-4">
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </motion.div>
-            ))}
-          </AnimatePresence>
-          
-          {isTyping && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex justify-start"
-            >
-              <div className="flex items-center space-x-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                </div>
-                <span className="text-sm text-gray-600 dark:text-gray-400">AI is thinking...</span>
-              </div>
-            </motion.div>
-          )}
-          
-          <div ref={messagesEndRef} />
-        </div>
+            )}
 
-        {/* Input Area */}
-        <div className="border-t border-gray-200 dark:border-gray-700 p-4">
-          <div className="flex space-x-2">
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(inputValue)}
-              placeholder="Ask me about your analytics..."
-              className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-brand-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
-              disabled={isTyping}
-            />
-            <Button
-              onClick={() => handleSendMessage(inputValue)}
-              disabled={!inputValue.trim() || isTyping}
-              size="sm"
-              className="px-4"
-            >
-              <Send className="w-4 h-4" />
-            </Button>
+            <div ref={messagesEndRef} />
           </div>
-        </div>
-      </CardContent>
-    </Card>
+
+          {/* Input Area */}
+          <div className="border-t border-gray-200 dark:border-gray-700 p-4 sm:p-6">
+            <div className="flex space-x-2 sm:space-x-3">
+              <div className="flex-1 relative">
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(inputValue)}
+                  placeholder="Ask about your analytics..."
+                  className="w-full pl-3 sm:pl-4 pr-10 sm:pr-12 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                />
+                <Button
+                  onClick={() => handleSendMessage(inputValue)}
+                  disabled={!inputValue.trim() || isTyping}
+                  size="icon"
+                  className="absolute right-1 top-1/2 transform -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10"
+                >
+                  <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   )
 }
 

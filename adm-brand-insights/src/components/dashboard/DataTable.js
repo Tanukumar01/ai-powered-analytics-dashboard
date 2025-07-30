@@ -156,10 +156,10 @@ const DataTable = ({ data, title, description }) => {
       transition={{ duration: 0.6, delay: 0.4 }}
     >
       <Card className="border-0 shadow-lg">
-        <CardHeader>
-          <div className="flex items-center justify-between">
+        <CardHeader className="p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             <div>
-              <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
+              <CardTitle className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
                 {title}
               </CardTitle>
               <p className="text-sm text-muted-foreground">
@@ -171,33 +171,33 @@ const DataTable = ({ data, title, description }) => {
                 onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
                 variant="outline" 
                 size="sm"
-                className="flex items-center space-x-2"
+                className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm"
               >
-                <Filter className="w-4 h-4" />
-                <span>Filters</span>
+                <Filter className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Filters</span>
                 {hasActiveFilters && (
                   <Badge variant="secondary" className="ml-1 text-xs">
                     {[filterText, dateRange.startDate, statusFilter.length, platformFilter.length].filter(Boolean).length}
                   </Badge>
                 )}
               </Button>
-              <Button onClick={exportToCSV} variant="outline" size="sm">
-                <Download className="w-4 h-4 mr-2" />
-                Export
+              <Button onClick={exportToCSV} variant="outline" size="sm" className="text-xs sm:text-sm">
+                <Download className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Export</span>
               </Button>
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4 sm:p-6">
           {/* Advanced Filters */}
           {showAdvancedFilters && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border"
+              className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border"
             >
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
                 <h3 className="text-sm font-medium text-foreground">Advanced Filters</h3>
                 {hasActiveFilters && (
                   <Button
@@ -212,25 +212,25 @@ const DataTable = ({ data, title, description }) => {
                 )}
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-muted-foreground mb-2">
+                  <label className="block text-xs font-medium text-muted-foreground mb-1 sm:mb-2">
                     Search
                   </label>
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3 sm:w-4 sm:h-4" />
                     <input
                       type="text"
                       placeholder="Search campaigns..."
                       value={filterText}
                       onChange={(e) => setFilterText(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                      className="w-full pl-7 sm:pl-10 pr-3 sm:pr-4 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-muted-foreground mb-2">
+                  <label className="block text-xs font-medium text-muted-foreground mb-1 sm:mb-2">
                     Date Range
                   </label>
                   <DateRangePicker
@@ -240,7 +240,7 @@ const DataTable = ({ data, title, description }) => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-muted-foreground mb-2">
+                  <label className="block text-xs font-medium text-muted-foreground mb-1 sm:mb-2">
                     Status
                   </label>
                   <FilterDropdown
@@ -248,11 +248,12 @@ const DataTable = ({ data, title, description }) => {
                     options={statusOptions}
                     selectedValues={statusFilter}
                     onFilterChange={setStatusFilter}
+                    className="w-full"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-muted-foreground mb-2">
+                  <label className="block text-xs font-medium text-muted-foreground mb-1 sm:mb-2">
                     Platform
                   </label>
                   <FilterDropdown
@@ -260,36 +261,40 @@ const DataTable = ({ data, title, description }) => {
                     options={platformOptions}
                     selectedValues={platformFilter}
                     onFilterChange={setPlatformFilter}
+                    className="w-full"
                   />
                 </div>
               </div>
             </motion.div>
           )}
 
-          {/* Results Summary */}
-          <div className="mb-4 flex items-center justify-between">
-            <div className="text-sm text-muted-foreground">
-              Showing {filteredData.length} of {data.length} campaigns
-              {hasActiveFilters && (
-                <span className="ml-2 text-brand-600">
-                  (filtered)
-                </span>
-              )}
+          {/* Search Bar */}
+          <div className="mb-4 sm:mb-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <input
+                type="text"
+                placeholder="Search campaigns..."
+                value={filterText}
+                onChange={(e) => setFilterText(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+              />
             </div>
           </div>
 
+          {/* Table */}
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200">
-                  {Object.keys(data[0]).map((key) => (
+                <tr className="border-b border-gray-200 dark:border-gray-700">
+                  {Object.keys(data[0] || {}).map((key) => (
                     <th
                       key={key}
                       onClick={() => requestSort(key)}
-                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-50 transition-colors"
+                      className="text-left py-3 px-2 sm:px-3 font-medium text-gray-900 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     >
                       <div className="flex items-center space-x-1">
-                        <span>{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
+                        <span className="capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
                         {getSortIcon(key)}
                       </div>
                     </th>
@@ -297,53 +302,51 @@ const DataTable = ({ data, title, description }) => {
                 </tr>
               </thead>
               <tbody>
-                {paginatedData.map((row, index) => (
-                  <motion.tr
+                {paginatedData.map((item, index) => (
+                  <tr
                     key={index}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                    className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                   >
-                    {Object.entries(row).map(([key, value]) => (
-                      <td key={key} className="px-4 py-3 text-sm text-gray-900">
+                    {Object.entries(item).map(([key, value]) => (
+                      <td key={key} className="py-3 px-2 sm:px-3 text-gray-900 dark:text-gray-100">
                         {formatCellValue(value, key)}
                       </td>
                     ))}
-                  </motion.tr>
+                  </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between mt-4">
-              <div className="text-sm text-gray-700">
-                Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} results
-              </div>
-              <div className="flex space-x-2">
-                <Button
-                  onClick={() => setCurrentPage(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  variant="outline"
-                  size="sm"
-                >
-                  Previous
-                </Button>
-                <span className="px-3 py-2 text-sm text-gray-700">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <Button
-                  onClick={() => setCurrentPage(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  variant="outline"
-                  size="sm"
-                >
-                  Next
-                </Button>
-              </div>
+          {/* Pagination */}
+          <div className="flex items-center justify-between mt-4 sm:mt-6">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} results
             </div>
-          )}
+            <div className="flex items-center space-x-2">
+              <Button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                variant="outline"
+                size="sm"
+                className="text-xs sm:text-sm"
+              >
+                Previous
+              </Button>
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                Page {currentPage} of {totalPages}
+              </span>
+              <Button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                variant="outline"
+                size="sm"
+                className="text-xs sm:text-sm"
+              >
+                Next
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </motion.div>
